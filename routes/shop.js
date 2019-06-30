@@ -4,8 +4,8 @@ const routeDir = require("../util/path")
 const adminData = require("./admin")
 const route = express.Router()
 route.get("/", (req, res, next) => {
-     const products=adminData.products
-     res.render("shop",{prods:products,docTitle:"shop"})
+    const products = adminData.products
+    res.render("shop", { prods: products, pageTitle: "shop", path: "/" })
     // res.sendFile(path.join(routeDir, "views", "shop.html"))
     // res.send("<h1>hello from express</h1>")
     //   next()
