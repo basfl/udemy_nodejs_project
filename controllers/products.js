@@ -3,7 +3,7 @@ const Product = require("../models/product")
 //const products = []
 exports.getAddProduct = (req, res, next) => {
 
-    res.render('add-product', { pageTitle: 'Add Product', path: '/admin/add-product', formsCSS: true, productCSS: true, activeAddProduct: true });
+    res.render('admin/add-product', { pageTitle: 'Add Product', path: '/admin/add-product', formsCSS: true, productCSS: true, activeAddProduct: true });
     //  res.render("add-product", { pageTitle: "add product", path: "/admin/add-product" })
     // res.sendfile(path.join(routeDir, "views", "add-product.html"))
     // res.send("<form action='product' method='POST'><input type='text' name='title'><button type='submit'>Submit</button></form>")
@@ -21,7 +21,7 @@ exports.postAddProduct = (req, res, next) => {
 exports.getProducts = (req, res, next) => {
     // const products = adminData.products;
     Product.fetchAll((products) => {
-        res.render('shop', {
+        res.render('shop/product-list', {
             prods: products,
             pageTitle: 'Shop',
             path: '/',
