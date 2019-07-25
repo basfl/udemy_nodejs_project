@@ -43,6 +43,13 @@ exports.getCart = (req, res, next) => {
   });
 };
 
+exports.postCart = (req, res, next) => {
+  //using body instead of param here because we send id as part of req body
+  const prodId=req.body.productId
+  console.log(prodId)
+  res.redirect('/cart')
+}
+
 exports.getOrders = (req, res, next) => {
   res.render('shop/orders', {
     path: '/orders',
