@@ -2,32 +2,40 @@ const Product = require('../models/product');
 const Cart = require('../models/cart');
 
 exports.getProducts = (req, res, next) => {
-  Product.findAll().then(products=>{
+  Product.findAll().then(products => {
     res.render('shop/product-list', {
       prods: products,
       pageTitle: 'All Products',
       path: '/products'
     });
-  }).catch(err=>{
+  }).catch(err => {
     console.log(err)
   })
 };
 
 exports.getProduct = (req, res, next) => {
   const prodId = req.params.productId
-  Product.findById(prodId).then(([product]) => {
+  console.log("id is ->", prodId)
+  Product.findAll({ where: { id: prodId } }).then(products => {
     res.render('shop/product-detail', {
-      product: product[0],
-      pageTitle: product.title,
+      product: products[0],
+      pageTitle: products.title,
       path: '/products'
     });
 
   }).catch(err => {
     console.log(err)
   })
-  // console.log("product is is ", prodId)
+  // Product.findByPk(prodId).then((product) => {
+  //   res.render('shop/product-detail', {
+  //     product: product,
+  //     pageTitle: product.title,
+  //     path: '/products'
+  //   });
 
-  // res.redirect("/")
+  // }).catch(err => {
+  //   console.log(err)
+  // })
 
 };
 
