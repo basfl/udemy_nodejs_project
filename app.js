@@ -37,17 +37,17 @@ app.use((req, res, next) => {
 
 app.use('/admin', adminRoutes);
 app.use(shopRoutes);
-
 app.use(errorController.get404);
-
+// sql associations ///
 Product.belongsTo(User, { constraints: true, onDelete: 'CASCADE' });
 User.hasMany(Product);
 User.hasOne(Cart)
 Cart.belongsTo(User)
-Cart.belongsToMany(Product,{through:CartItem})
-Product.belongsToMany(Cart,{through:CartItem})
+Cart.belongsToMany(Product, { through: CartItem })
+Product.belongsToMany(Cart, { through: CartItem })
+////////////////////////////
 //sync({ force: true }).
-sequlize.sync({force:true}).then((result) => {
+sequlize.sync({}).then((result) => {
     // console.log(result)
 
     return User.findByPk(1)
@@ -61,6 +61,9 @@ sequlize.sync({force:true}).then((result) => {
     return Promise.resolve(user)
 }).then(user => {
     //console.log(user)
+    return user.createCart()
+    
+}).then(user=>{
     app.listen(3000);
 })
     .catch(err => {
