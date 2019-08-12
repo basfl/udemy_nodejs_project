@@ -1,5 +1,7 @@
 const Product = require('../models/product');
 const Cart = require('../models/cart');
+const Order = require('../models/order')
+const OrderItem = require("../models/order-item")
 
 exports.getProducts = (req, res, next) => {
   Product.findAll().then(products => {
@@ -104,6 +106,32 @@ exports.postCart = (req, res, next) => {
     .catch(err => console.log(err));
 };
 
+exports.postOrder = ((req, res, next) => {
+  req.user.getCart()
+    .then(cart => {
+      return cart.getProducts();
+    })
+    .then(products => {
+      return req.user.createOrder().then((order) => {
+        return order.addProducts(products.map((product) => {
+          product.orderItem = { quantity: product.cartItem.quantity }
+          return product
+
+        }))
+      })
+      .then(result=>{
+        res.redirect('/orders')
+      }).catch(err => {
+        console.log(err)
+      })
+
+    })
+    .catch(err => {
+      console.log(err)
+    })
+
+})
+
 exports.postCartDeleteProduct = (req, res, next) => {
   const prodId = req.body.productId;
   req.user.getCart().then(cart => {
@@ -111,10 +139,10 @@ exports.postCartDeleteProduct = (req, res, next) => {
 
   }).then(products => {
     const product = products[0]
-   return  product.cartItem.destroy()
-  }).then(result=>{
+    return product.cartItem.destroy()
+  }).then(result => {
     res.redirect('/cart');
-  //  console.log(result)
+    //  console.log(result)
   }).catch(err => {
     console.log(err)
   })
