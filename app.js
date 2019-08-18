@@ -23,7 +23,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 //register a middleware to attach the user to incomming requests
 app.use((req, res, next) => {
     return User.findById("5d599643161f412d788aac10").then(user => {
-        req.user = user;
+        req.user = new User(user.name, user.email, user.cart, user._id);
         next();
 
     }).catch(err => {
