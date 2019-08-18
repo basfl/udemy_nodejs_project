@@ -1,7 +1,4 @@
 const Product = require('../models/product');
-const mongodb = require('mongodb')
-
-const ObjectId = mongodb.ObjectId;
 
 exports.getAddProduct = (req, res, next) => {
   res.render('admin/edit-product', {
@@ -21,7 +18,7 @@ exports.postAddProduct = (req, res, next) => {
   const imageUrl = req.body.imageUrl;
   const price = req.body.price;
   const description = req.body.description;
-  const product = new Product(title, description, price, imageUrl)
+  const product = new Product(title, description, price, imageUrl,null,req.user._id)
   product.save().then(result => {
     //  console.log(result)
     console.log("created product")
@@ -65,7 +62,7 @@ exports.postEditProduct = (req, res, next) => {
   const updatedDesc = req.body.description;
   console.log("*******", updatedTitle)
 
-  const product = new Product(updatedTitle, updatedDesc, updatedPrice, updatedImageUrl, new ObjectId(prodId))
+  const product = new Product(updatedTitle, updatedDesc, updatedPrice, updatedImageUrl, prodId)
   product.save()
     .then(result => {
       console.log("Updated Product!!")
@@ -104,14 +101,21 @@ exports.getProducts = (req, res, next) => {
 
 exports.postDeleteProduct = (req, res, next) => {
   const prodId = req.body.productId
-  Product.findByPk(prodId).then(product => {
-    product.destroy()
-  }).then(result => {
-    console.log("DESTROY!!!")
-    res.redirect('/admin/products')
-  }).catch(err => {
-    console.log(err)
-  })
+  Product.deleteById(prodId)
+    .then(() => {
+      console.log("DESTROY!!!")
+      res.redirect('/admin/products')
+    }).catch(err => {
+      console.log(err)
+    })
+  // Product.findByPk(prodId).then(product => {
+  //   product.destroy()
+  // }).then(result => {
+  //   console.log("DESTROY!!!")
+  //   res.redirect('/admin/products')
+  // }).catch(err => {
+  //   console.log(err)
+  // })
   // Product.deleteById(prodId);
   // res.redirect('/admin/products');
 

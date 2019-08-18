@@ -5,6 +5,8 @@ const monoConnect = require('./util/database').mongoConnect
 
 const errorController = require('./controllers/error');
 
+const User = require('./models/user')
+
 
 const app = express();
 
@@ -20,15 +22,15 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 //register a middleware to attach the user to incomming requests
 app.use((req, res, next) => {
-    // return User.findByPk(1).then(user => {
-    //     req.user = user;
-    //     next();
+    return User.findById("5d599643161f412d788aac10").then(user => {
+        req.user = user;
+        next();
 
-    // }).catch(err => {
-    //     console.log(err)
+    }).catch(err => {
+        console.log(err)
 
-    // })
-    next()
+    })
+
 
 })
 
