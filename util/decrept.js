@@ -20,5 +20,6 @@ decrypt = (text) => {
     dec += decipher.final('utf8');
     return dec;
 }
+
 MONGODB_CONNECTION = decrypt(data.toString())
 module.exports = MONGODB_CONNECTION
