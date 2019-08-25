@@ -50,8 +50,13 @@ userSchema.methods.removeFromCart = function (productId) {
     return item.productId.toString() !== productId.toString();
   });
   this.cart.items = updatedCartItems
- return this.save()
+  return this.save()
 }
+
+userSchema.methods.clearCart = function () {
+  this.cart = { items: [] };
+  return this.save();
+};
 
 
 
