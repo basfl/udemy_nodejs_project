@@ -31,16 +31,17 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({ secret: 'my secret', resave: false, saveUninitialized: false, store: store }))
 
 //register a middleware to attach the user to incomming requests
-// app.use((req, res, next) => {
-//     return User.findById("5d618549ff19836f1cd09cbe").then(user => {
-//         req.user = user;
-//         next();
-
-//     }).catch(err => {
-//         console.log(err)
-
-//     })
-// })
+app.use((req, res, next) => {
+    if (!req.session.user) {
+        return next();
+    }
+    User.findById(req.session.user._id)
+        .then(user => {
+            req.user = user;
+            next();
+        })
+        .catch(err => console.log(err));
+});
 
 app.use('/admin', adminRoutes);
 app.use(shopRoutes);
