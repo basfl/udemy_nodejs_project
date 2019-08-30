@@ -1,6 +1,9 @@
 const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
+const session = require('express-session')
+//conn connect-mongodb-session will return function which expect session as arg
+const MongoDBStore = require('connect-mongodb-session')(session)
 const mongoose = require('mongoose')
 
 
@@ -8,8 +11,12 @@ const connection_string = require('./util/decrept')
 const errorController = require('./controllers/error');
 const User = require('./models/user')
 
-
 const app = express();
+
+var store = new MongoDBStore({
+    uri: connection_string,
+    collection: 'sessions'
+});
 
 app.set('view engine', 'ejs');
 app.set('views', 'views');
@@ -21,21 +28,19 @@ const authRoutes = require('./routes/auth')
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(session({ secret: 'my secret', resave: false, saveUninitialized: false, store: store }))
 
 //register a middleware to attach the user to incomming requests
-app.use((req, res, next) => {
-    return User.findById("5d618549ff19836f1cd09cbe").then(user => {
-        req.user = user;
-        next();
+// app.use((req, res, next) => {
+//     return User.findById("5d618549ff19836f1cd09cbe").then(user => {
+//         req.user = user;
+//         next();
 
-    }).catch(err => {
-        console.log(err)
+//     }).catch(err => {
+//         console.log(err)
 
-    })
-
-
-    
-})
+//     })
+// })
 
 app.use('/admin', adminRoutes);
 app.use(shopRoutes);
