@@ -53,7 +53,7 @@ exports.getEditProduct = (req, res, next) => {
         path: '/admin/edit-product',
         editing: true,
         product: product,
-        isAuthenticated: req.sesson.isLoggedIn
+        isAuthenticated: req.session.isLoggedIn
       });
 
     }).then(err => {
