@@ -6,6 +6,7 @@ const session = require('express-session')
 const MongoDBStore = require('connect-mongodb-session')(session)
 const mongoose = require('mongoose')
 const csrf = require('csurf');
+const flash = require('connect-flash')
 
 
 const connection_string = require('./util/decrept')
@@ -21,19 +22,21 @@ var store = new MongoDBStore({
 
 const csrfProtection = csrf();
 
+
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 
 const adminRoutes = require('./routes/admin');
-const shopRoutes = require('./routes/shop'); 
+const shopRoutes = require('./routes/shop');
 const authRoutes = require('./routes/auth')
-
+ 
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({ secret: 'my secret', resave: false, saveUninitialized: false, store: store }))
 // it is important to add csrf after initializing the session
 app.use(csrfProtection);
+app.use(flash())
 
 //register a middleware to attach the user to incomming requests
 app.use((req, res, next) => {
@@ -52,7 +55,7 @@ app.use((req, res, next) => {
     res.locals.isAuthenticated = req.session.isLoggedIn;
     res.locals.csrfToken = req.csrfToken();
     next();
-  });
+});
 
 
 
