@@ -1,6 +1,7 @@
 const path = require('path');
 
 const express = require('express');
+const { body } = require('express-validator/check');
 
 const adminController = require('../controllers/admin');
 const isAuth = require('../middleware/is-auth')
@@ -16,11 +17,31 @@ router.get('/add-product', adminController.getAddProduct);
 router.get('/products', adminController.getProducts);
 
 // /admin/add-product => POST
-router.post('/add-product', adminController.postAddProduct);
+router.post('/add-product', [
+    body('title')
+        .isString()
+        .isLength({ min: 3 })
+        .trim(), 
+    body('imageUrl').isURL(),
+    body('price').isFloat(),
+    body('description')
+        .isLength({ min: 5, max: 400 })
+        .trim()
+], adminController.postAddProduct);
 
 router.get('/edit-product/:productId', adminController.getEditProduct)
 
 router.post('/edit-product', adminController.postEditProduct)
-router.post('/delete-product', adminController.postDeleteProduct)
+router.post('/delete-product', [
+    body('title')
+        .isString()
+        .isLength({ min: 3 })
+        .trim(),
+    body('imageUrl'),
+    body('price').isFloat(),
+    body('description')
+        .isLength({ min: 5, max: 400 })
+        .trim()
+], adminController.postDeleteProduct)
 
 module.exports = router;
