@@ -69,7 +69,12 @@ app.use(shopRoutes);
 app.use(authRoutes)
 app.use("/500", errorController.get500)
 app.use(errorController.get404);
+//special midleware for errors
+app.use((error,req,res,next)=>{
 
+    res.redirect("/500")
+
+})
 mongoose.connect(connection_string).then(result => {
     // User.findOne().then(user => {
     //     if (!user) {
