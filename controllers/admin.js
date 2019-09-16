@@ -89,6 +89,7 @@ exports.postEditProduct = (req, res, next) => {
   const updatedDesc = req.body.description;
 
   const errors = validationResult(req);
+  console.log("errors->", errors.array());
 
   if (!errors.isEmpty()) {
     return res.status(422).render('admin/edit-product', {
