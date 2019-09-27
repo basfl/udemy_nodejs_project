@@ -13,6 +13,8 @@ const uuidv1 = require('uuid/v1');
 
 const connection_string = require('./util/decrept')
 const errorController = require('./controllers/error');
+const shopController = require('./controllers/shop');
+const isAuth = require('./middleware/is-auth');
 const User = require('./models/user')
 
 const app = express();
@@ -71,12 +73,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use("/images", express.static(path.join(__dirname, 'images')));
 app.use(session({ secret: 'my secret', resave: false, saveUninitialized: false, store: store }))
 // it is important to add csrf after initializing the session
-app.use(csrfProtection);
+
 app.use(flash());
 
 app.use((req, res, next) => {
     res.locals.isAuthenticated = req.session.isLoggedIn;
-    res.locals.csrfToken = req.csrfToken();
     next();
 });
 
@@ -96,6 +97,14 @@ app.use((req, res, next) => {
         .catch(err => {
             next(new Error(err));
         });
+});
+
+app.post('/create-order', isAuth, shopController.postOrder);
+
+app.use(csrfProtection);
+app.use((req, res, next) => {
+  res.locals.csrfToken = req.csrfToken();
+  next();
 });
 
 
