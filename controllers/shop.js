@@ -108,10 +108,30 @@ exports.getCart = (req, res, next) => {
     });
 };
 
+// exports.postCart = (req, res, next) => {
+//   const prodId = req.body.productId;
+//   console.log("************************");
+//   Product.findById(prodId)
+//     .then(product => {
+//       return req.user.addToCart(product);
+//     })
+//     .then(result => {
+//       console.log("**************",result);
+//       res.redirect('/cart');
+//     })
+//     .catch(err => {
+//       const error = new Error(err);
+//       error.httpStatusCode = 500;
+//       return next(error);
+//     });
+// };
+
 exports.postCart = (req, res, next) => {
   const prodId = req.body.productId;
+  console.log("*****************",prodId.toString());
   Product.findById(prodId)
     .then(product => {
+      console.log("!!!!!!!!!!!!!!!!",product)
       return req.user.addToCart(product);
     })
     .then(result => {
@@ -137,6 +157,31 @@ exports.postCartDeleteProduct = (req, res, next) => {
       error.httpStatusCode = 500;
       return next(error);
     });
+};
+
+exports.getCheckout = (req, res, next) => {
+  req.user
+    .populate('cart.items.productId')
+    .execPopulate()
+    .then(user => {
+      const products = user.cart.items;
+      let total = 0;
+      products.forEach(p => {
+        total += p.quantity * p.productId.price;
+      });
+      res.render('shop/checkout', {
+        path: '/checkout',
+        pageTitle: 'Checkout',
+        products: products,
+        totalSum: total
+      });
+    })
+    .catch(err => {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    });
+
 };
 
 exports.postOrder = (req, res, next) => {
