@@ -150,7 +150,7 @@ mongoose.connect(connection_string).then(result => {
     const PORT = process.env.Port || 3000
     app.listen(PORT, () => {
         console.log(`app is running on port ${PORT}`);
-        console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
+       
     })
 }).catch(err => {
     console.log(err)
