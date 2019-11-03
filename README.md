@@ -7,7 +7,8 @@
       * [Official Pug Docs](https://pugjs.org/api/getting-started.html)
     * EJS
     * express-handlebars
-
+# ENV on windows:
+ * "start": "SET NODE_ENV=production & SET STRIPE_KEY=somekey & node app.js",
 # running on Dev
  * npm run start:dev     
 # ssl 
