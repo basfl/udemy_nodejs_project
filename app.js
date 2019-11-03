@@ -3,15 +3,16 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const session = require('express-session')
 //conn connect-mongodb-session will return function which expect session as arg
-const MongoDBStore = require('connect-mongodb-session')(session)
-const mongoose = require('mongoose')
+const MongoDBStore = require('connect-mongodb-session')(session);
+const mongoose = require('mongoose');
 const csrf = require('csurf');
-const flash = require('connect-flash')
-const multer = require('multer')
+const flash = require('connect-flash');
+const multer = require('multer');
 const uuidv1 = require('uuid/v1');
+const helmet=require('helmet');
 
 
-const connection_string = require('./util/decrept')
+const connection_string = require('./util/decrept');
 const errorController = require('./controllers/error');
 const shopController = require('./controllers/shop');
 const isAuth = require('./middleware/is-auth');
@@ -66,7 +67,7 @@ const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
 const authRoutes = require('./routes/auth')
 
-
+app.use(helmet());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(multer({ storage: fileStorage, fileFilter: fileFilter }).single('image'));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -123,6 +124,7 @@ app.use((error, req, res, next) => {
     });
 
 })
+console.log("env-->",process.env.NODE_ENV);
 mongoose.connect(connection_string).then(result => {
     // User.findOne().then(user => {
     //     if (!user) {
@@ -131,7 +133,7 @@ mongoose.connect(connection_string).then(result => {
     //     }
     // })
 
-    app.listen(3000)
+    app.listen(process.env.Port || 3000)
 }).catch(err => {
     console.log(err)
 })
