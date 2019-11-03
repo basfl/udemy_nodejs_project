@@ -1,4 +1,5 @@
 const path = require('path');
+const fs = require('fs');
 const express = require('express');
 const bodyParser = require('body-parser');
 const session = require('express-session')
@@ -11,6 +12,7 @@ const multer = require('multer');
 const uuidv1 = require('uuid/v1');
 const helmet = require('helmet');
 const compression = require('compression');
+const morgan = require("morgan");
 
 
 const connection_string = require('./util/decrept');
@@ -67,9 +69,14 @@ app.set('views', 'views');
 const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
 const authRoutes = require('./routes/auth')
-
+const accessLogStream = fs.createWriteStream(path.join(__dirname, "access.log"), {
+    flags: 'a'
+});
 app.use(helmet());
+// compression is used to compress files for client
 app.use(compression());
+// morgan is used for logging
+app.use(morgan('combined', { stream: accessLogStream }));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(multer({ storage: fileStorage, fileFilter: fileFilter }).single('image'));
 app.use(express.static(path.join(__dirname, 'public')));
