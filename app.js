@@ -149,7 +149,7 @@ mongoose.connect(connection_string).then(result => {
     //   https.createServer({ key: privateKey, cert: certificate }, app).listen(process.env.Port || 3000)
     const PORT = process.env.Port || 3000
     app.listen(PORT, () => {
-        console.log("app is running on port ${PORT}");
+        console.log(`app is running on port ${PORT}`);
     })
 }).catch(err => {
     console.log(err)
