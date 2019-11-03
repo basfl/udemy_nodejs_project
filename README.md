@@ -8,6 +8,7 @@
     * EJS
     * express-handlebars
 
-     
+# running on Dev
+ * npm run start:dev     
 # ssl 
  * openssl req -nodes -new -x509 -keyout server.key -out server.cert
