@@ -13,6 +13,7 @@ const uuidv1 = require('uuid/v1');
 const helmet = require('helmet');
 const compression = require('compression');
 const morgan = require("morgan");
+const https = require('https');
 
 
 const connection_string = require('./util/decrept');
@@ -29,6 +30,9 @@ var store = new MongoDBStore({
 });
 
 const csrfProtection = csrf();
+
+const privateKey = fs.readFileSync('server.key');
+const certificate = fs.readFileSync('server.cert');
 
 // const fileStorage = multer.diskStorage({
 //     destination: (req, file, cb) => {
@@ -142,6 +146,7 @@ mongoose.connect(connection_string).then(result => {
     //     }
     // })
 
+ //   https.createServer({ key: privateKey, cert: certificate }, app).listen(process.env.Port || 3000)
     app.listen(process.env.Port || 3000)
 }).catch(err => {
     console.log(err)
