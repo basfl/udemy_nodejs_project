@@ -9,7 +9,8 @@ const csrf = require('csurf');
 const flash = require('connect-flash');
 const multer = require('multer');
 const uuidv1 = require('uuid/v1');
-const helmet=require('helmet');
+const helmet = require('helmet');
+const compression = require('compression');
 
 
 const connection_string = require('./util/decrept');
@@ -68,6 +69,7 @@ const shopRoutes = require('./routes/shop');
 const authRoutes = require('./routes/auth')
 
 app.use(helmet());
+app.use(compression());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(multer({ storage: fileStorage, fileFilter: fileFilter }).single('image'));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -104,8 +106,8 @@ app.post('/create-order', isAuth, shopController.postOrder);
 
 app.use(csrfProtection);
 app.use((req, res, next) => {
-  res.locals.csrfToken = req.csrfToken();
-  next();
+    res.locals.csrfToken = req.csrfToken();
+    next();
 });
 
 
@@ -124,7 +126,7 @@ app.use((error, req, res, next) => {
     });
 
 })
-console.log("env-->",process.env.NODE_ENV);
+console.log("env-->", process.env.NODE_ENV);
 mongoose.connect(connection_string).then(result => {
     // User.findOne().then(user => {
     //     if (!user) {
